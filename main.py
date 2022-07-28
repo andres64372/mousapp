@@ -1,5 +1,6 @@
 from flask import Response
 from flask_cors import CORS
+from flask_socketio import SocketIO
 
 import json
 
@@ -9,6 +10,7 @@ from models.model import Barberies, Barbers, db
 app = create()
 
 CORS(app)
+socketio = SocketIO(app, cors_allowed_origins='*')
 
 dummyList = {
   "barberies": [
@@ -98,4 +100,4 @@ def index():
     return Response(json.dumps(data), status=200, content_type='application/json')
 
 if __name__ == '__main__':
-    app.run()
+    socketio.run(app)
