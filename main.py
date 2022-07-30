@@ -46,58 +46,62 @@ dummyList = {
 }
 
 @app.route('/barberies')
-def index():
-    # from secrets import token_hex
-    # for i in range(10):
-    #   id = token_hex(8)
-    #   insert = Barberies(
-    #     id=id,
-    #     title="Cavaliere",
-    #     location="Laureles",
-    #     distance="9.8",
-    #     stars="4.3",
-    #     url="https://blog.agendapro.com/hubfs/Barberia.png",
-    #     longitude=-75.590640,
-    #     latitude=6.248037,
-    #     city="Medellín"
-    #   )
-    #   db.session.add(insert)
-    # for i in range(15):
-    #   id = token_hex(8)
-    #   insert = Barbers(
-    #     id=id,
-    #     first_name="Andres",
-    #     last_name="Herrera",
-    #     stars="4.3",
-    #     url="https://cms.modumb.com/storage/carreras/mundo-barberia-149.png",
-    #     city="Medellín"
-    #   )
-    #   db.session.add(insert)
-    # db.session.commit()
-    data = {"barberies":[],"barbers":[]}
+def barberies():
+  # from secrets import token_hex
+  # for i in range(10):
+  #   id = token_hex(8)
+  #   insert = Barberies(
+  #     id=id,
+  #     title="Cavaliere",
+  #     location="Laureles",
+  #     distance="9.8",
+  #     stars="4.3",
+  #     url="https://blog.agendapro.com/hubfs/Barberia.png",
+  #     longitude=-75.590640,
+  #     latitude=6.248037,
+  #     city="Medellín"
+  #   )
+  #   db.session.add(insert)
+  # for i in range(15):
+  #   id = token_hex(8)
+  #   insert = Barbers(
+  #     id=id,
+  #     first_name="Andres",
+  #     last_name="Herrera",
+  #     stars="4.3",
+  #     url="https://cms.modumb.com/storage/carreras/mundo-barberia-149.png",
+  #     city="Medellín"
+  #   )
+  #   db.session.add(insert)
+  # db.session.commit()
+  data = []
+  barberies = Barberies.query.filter_by(city="Medellín").all()
+  for barbery in barberies:
+    data.append({
+      "key": barbery.id, 
+      "title": barbery.title, 
+      "location": barbery.location, 
+      "distance": barbery.distance, 
+      "stars": barbery.stars, 
+      "url": barbery.url, 
+      "longitude": barbery.longitude, 
+      "latitude": barbery.latitude
+    })
 
-    barberies = Barberies.query.filter_by(city="Medellín").all()
-    for barbery in barberies:
-      data["barberies"].append({
-        "key": barbery.id, 
-        "title": barbery.title, 
-        "location": barbery.location, 
-        "distance": barbery.distance, 
-        "stars": barbery.stars, 
-        "url": barbery.url, 
-        "longitude": barbery.longitude, 
-        "latitude": barbery.latitude
-      })
+  return Response(json.dumps(data), status=200, content_type='application/json')
 
-    barbers = Barbers.query.filter_by(city="Medellín").all()
-    for barber in barbers:
-      data["barbers"].append({
-        "key": barber.id, 
-        "title": f"{barber.first_name} {barber.last_name}", 
-        "stars": barber.stars, 
-        "url": barber.url, 
-      })
-    return Response(json.dumps(data), status=200, content_type='application/json')
+@app.route('/barbers')
+def barbers():
+  data = []
+  barbers = Barbers.query.filter_by(city="Medellín").all()
+  for barber in barbers:
+    data.append({
+      "key": barber.id, 
+      "title": f"{barber.first_name} {barber.last_name}", 
+      "stars": barber.stars, 
+      "url": barber.url, 
+    })
+  return Response(json.dumps(data), status=200, content_type='application/json')
 
 if __name__ == '__main__':
     socketio.run(app)
